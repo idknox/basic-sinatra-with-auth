@@ -1,0 +1,27 @@
+
+<div id="flash">
+  <% if flash[:notice] %>
+    <p><%= flash[:notice] %></p>
+  <% end %>
+</div>
+
+<div class="wrapper">
+  <div id="register">
+    <form method="GET" action="/register">
+    <button name="register" id="regbutton">Register</button>
+    </form>
+  </div>
+
+
+  <div id="login">
+    <form method="post" action="/">
+      <ul>
+        <li><label for="username">Username:</label></li>
+        <li><input type="text" name="username" id="username" class="textbox"/></li>
+        <li><label for="password">Password:</label></li>
+        <li><input type="password" name="password" id="password" class="textbox"/></li>
+      </ul>
+      <input type="submit" value="Login" id="loginbutton"/>
+    </form>
+  </div>
+</div>

@@ -13,6 +13,24 @@ class App < Sinatra::Application
   end
 
   get "/" do
-    "Hello, world"
+
+  erb :homepage
   end
+
+  get "/register" do
+
+  erb :register
+  end
+
+  post "/register" do
+    flash[:notice] = "Thank you for registering"
+    redirect "/"
+  end
+
+  post "/" do
+  username = params[:username]
+
+  erb :loggedin, :locals=>{:username=>username}
+  end
+
 end
