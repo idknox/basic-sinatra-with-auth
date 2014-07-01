@@ -1,11 +1,13 @@
 
-<div id="flash">
-  <% if flash[:notice] %>
-    <p><%= flash[:notice] %></p>
-  <% end %>
-</div>
 
 <div class="wrapper">
+
+  <div id="flash">
+    <% if flash[:notice] %>
+      <p><%= flash[:notice] %></p>
+    <% end %>
+  </div>
+
   <div id="register">
     <form method="GET" action="/register">
     <button name="register" id="regbutton">Register</button>
@@ -24,4 +26,7 @@
       <input type="submit" value="Login" id="loginbutton"/>
     </form>
   </div>
+
 </div>
+
+

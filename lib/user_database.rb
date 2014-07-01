@@ -46,4 +46,5 @@ class UserDatabase
   def offset_id(id)
     id - 1
   end
+
 end

@@ -23,14 +23,32 @@ class App < Sinatra::Application
   end
 
   post "/register" do
-    flash[:notice] = "Thank you for registering"
+    username = params[:name]
+    password = params[:password]
+
+    @user_database.insert(:username=>username, :password=>password)
+
+    flash[:notice] = "Thank you for registering #{@user_database.all}"
     redirect "/"
+
   end
 
   post "/" do
-  username = params[:username]
+    username = params[:username]
+    password = params[:password]
+    if username == '' && password == ''
+      flash[:notice] = "Username and password is required"
+      redirect "/"
+    elsif username == ''
+      flash[:notice] = "Username is required"
+      redirect "/"
+    elsif password == ''
+      flash[:notice] = "Password is required"
+      redirect "/"
+    else
 
-  erb :loggedin, :locals=>{:username=>username}
+      erb :loggedin, :locals=>{:username=>username}
+    end
   end
 
 end
