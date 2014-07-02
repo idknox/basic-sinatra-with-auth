@@ -1,18 +1,30 @@
+<div class="wrapper">
+<section class="clearfix">
+  <article class="one_fourth">
+  </article>
+  <article class="one_half">
+
 <form method="post" action="/register">
   <ul>
     <li>
-      <label for="name">Username</label>
-      <input type="text" name="name" id="name"/>
+      <label class="names" for="name">Username</label>
+      <input class = "names" type="text" name="name" id="name"/>
     </li>
     <li>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password"/>
+      <label class="names" for="password">Password</label>
+      <input class = "names" type="password" name="password" id="password"/>
     </li>
-    <li>
-      <input type="submit" value="Submit">
-      <% if flash[:notice] %>
+   </ul>
+      <input class="loginbutton" type="submit" value="Submit">
+
+      <div class = "red"><% if flash[:notice] %>
         <p><%= flash[:notice] %></p>
       <% end %>
-    </li>
-  </ul>
+      </div>
 </form>
+
+    </article>
+    <article class="one_fourth">
+    </article>
+  </section>
+</div>

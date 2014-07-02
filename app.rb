@@ -2,6 +2,7 @@ require "sinatra"
 require "rack-flash"
 
 require "./lib/user_database"
+require "./lib/methods.rb"
 
 class App < Sinatra::Application
   enable :sessions
@@ -23,35 +24,11 @@ class App < Sinatra::Application
   end
 
   post "/register" do
-    username = params[:name]
-    password = params[:password]
-
-    if (@user_database.all).select{|user| user[:username] == username} == []
-      @user_database.insert(:username=>username, :password=>password)
-      flash[:notice] = "Thank you for registering" #{@user_database.all}
-      redirect "/"
-    else
-      flash[:notice] = "That username is already taken"
-      redirect "/register"
-    end
+    check_user(params[:name], params[:password])
   end
 
   post "/" do
-    username = params[:username]
-    password = params[:password]
-    if username == '' && password == ''
-      flash[:notice] = "Username and password is required"
-      redirect "/"
-    elsif username == ''
-      flash[:notice] = "Username is required"
-      redirect "/"
-    elsif password == ''
-      flash[:notice] = "Password is required"
-      redirect "/"
-    else
-
-      erb :loggedin, :locals=>{:username=>username}
-    end
+    check_input(params[:username], params[:password])
   end
 
 end
