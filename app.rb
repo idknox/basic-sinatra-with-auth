@@ -26,11 +26,14 @@ class App < Sinatra::Application
     username = params[:name]
     password = params[:password]
 
-    @user_database.insert(:username=>username, :password=>password)
-
-    flash[:notice] = "Thank you for registering #{@user_database.all}"
-    redirect "/"
-
+    if (@user_database.all).select{|user| user[:username] == username} == []
+      @user_database.insert(:username=>username, :password=>password)
+      flash[:notice] = "Thank you for registering" #{@user_database.all}
+      redirect "/"
+    else
+      flash[:notice] = "That username is already taken"
+      redirect "/register"
+    end
   end
 
   post "/" do
