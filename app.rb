@@ -13,9 +13,6 @@ class App < Sinatra::Application
     @user_database = UserDatabase.new
   end
 
-  before do
-
-  end
   get "/" do
 
   erb :homepage
@@ -27,24 +24,26 @@ class App < Sinatra::Application
   end
 
   post "/register" do
-    check_user(params[:name], params[:password])
+    check_reg(params[:name], params[:password])
   end
 
   post "/" do
-    check_input(params[:username], params[:password])
+    check_login(params[:username], params[:password])
   end
 
-  # delete "/" do
-  # name = params[:name]
-  #
-  # flash[:notice] = "#{name}"
+  delete "/" do
+    id = params[:id].to_i
+    flash[:notice] = "#{@user_database.find(id)[:username]} deleted"
+    @user_database.delete(id)
+    erb :loggedin, :locals => {:users => display_users(session[:id]), :cur_user => @user_database.find(session[:id])[:username]}
+  end
 
 
 
 
   private
 
-  def check_input(username, password)
+  def check_login(username, password)
     if username == '' && password == ''
       flash[:notice] = "Username and password is required"
       redirect "/"
@@ -61,13 +60,14 @@ class App < Sinatra::Application
       flash[:notice] = "Invalid password"
       redirect "/"
     else
-      erb :loggedin, :locals => {:users => display_users(username), :cur_user => username}
+      session[:id] = get_id(username)
+      erb :loggedin, :locals => {:users => display_users(session[:id]), :cur_user => @user_database.find(session[:id])[:username]}
     end
   end
 
-  def check_user(username, password)
+  def check_reg(username, password)
     if (@user_database.all).select { |user| user[:username] == username } == []
-      user = @user_database.insert(:username => username, :password => password)
+      @user_database.insert(:username => username, :password => password)
       flash[:notice] = "Thank you for registering"
       redirect "/"
     else
@@ -76,8 +76,8 @@ class App < Sinatra::Application
     end
   end
 
-  def display_users(cur_user)
-    @user_database.all.select {|user| user[:username] != cur_user}
+  def display_users(id)
+    @user_database.all.select {|user| user[:id] != id}
   end
 
   def get_id(username)

@@ -1,5 +1,7 @@
 
-</form>
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
 
 <section class="clearfix">
   <article class="one_fourth">
@@ -8,11 +10,15 @@
     <div class="one_half">
       <h1>Welcome, <%= cur_user %></h1>
       <form method="get" action="/">
-        <input class="loginbutton" type="submit" value="Logout" />
+        <input class="loginbutton" type="submit" value="Logout"/>
       </form>
-      <ul>
+        <ul>
         <% users.each do |user| %>
-          <li><%= user[:username] %><input type="submit" value="delete" name="name"></li>
+          <li><%= user[:username] %>
+            <form method="post" action="/">
+            <input type="hidden" name="_method" value="delete"/>
+            <input type="submit" name="id" value="Delete"/>
+            </form>
           <% end %>
       </ul>
     </div>
