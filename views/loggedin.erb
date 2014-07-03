@@ -6,9 +6,15 @@
   </article>
   <article class="one_half">
     <div class="one_half">
-      <h1>Welcome, <%=username%></h1>
+      <h1>Welcome, <%= cur_user %></h1>
       <form method="get" action="/">
         <input class="loginbutton" type="submit" value="Logout" />
+      </form>
+      <ul>
+        <% users.each do |user| %>
+          <li><%= user[:username] %><input type="submit" value="delete" name="name"></li>
+          <% end %>
+      </ul>
     </div>
   </article>
   <article class="one_fourth">

@@ -110,3 +110,7 @@ li {
 .red {
     color: red;
 }
+
+.users {
+    border: 2px solid black;
+}
