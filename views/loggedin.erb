@@ -9,16 +9,18 @@
   <article class="one_half">
     <div class="one_half">
       <h1>Welcome, <%= cur_user %></h1>
-      <form method="get" action="/">
+      <form method="get" action="/logout">
         <input class="loginbutton" type="submit" value="Logout"/>
       </form>
-        <ul>
+       <h1>Users: </h1>
+       <ul>
         <% users.each do |user| %>
-          <li><%= user[:username] %>
-            <form method="post" action="/">
+          <li><a href="/<%= user[:username] %>"><%= user[:username] %></a></li>
+            <form method="post" action="/<%=user[:id] %>">
             <input type="hidden" name="_method" value="delete"/>
-            <input type="submit" name="id" value="Delete"/>
+            <input type="submit" value="Delete"/>
             </form>
+          </li>
           <% end %>
       </ul>
     </div>
@@ -26,3 +28,38 @@
   <article class="one_fourth">
   </article>
 </section>
+
+<section class="clearfix">
+  <article class="one_fourth">
+  </article>
+  <article class="one_half">
+    <form action="/new_fish" method="get">
+      <label for="create_fish" name="create_fish"></label>
+      <button type="submit" class="loginbutton">Create Fish</button>
+    </form>
+  </article>
+  <article class="one_fourth">
+  </article>
+</section>
+
+<section class="clearfix">
+  <article class="one_fourth">
+  </article>
+  <article class="one_half">
+    <h1>Fish: </h1>
+    <ul class="lists">
+      <% fish.each do |fishie| %>
+        <li><a class = "lists" href="<%= fishie[:wiki] %>"><%=fishie[:name] %></a></li>
+        <form method="post" action="/fish/<%= fishie[:id] %>">
+          <input type="hidden" name="_method" value="delete"/>
+          <input type="submit" name="delete" value="Delete"/>
+        </form>
+        <% end %>
+    </ul>
+  </article>
+  <article class="one_fourth">
+
+  </article>
+</section>
+
+

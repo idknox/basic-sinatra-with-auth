@@ -80,8 +80,9 @@ article {
     font-size: 2em;
 }
 
-li {
+ul {
     list-style-type: none;
+
 }
 
 .names {
@@ -113,4 +114,12 @@ li {
 
 .users {
     border: 2px solid black;
+}
+
+.lists ul {
+    border: 2px solid black;
+}
+
+.lists a {
+    text-decoration: none;
 }

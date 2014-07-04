@@ -2,7 +2,7 @@ require "sinatra"
 require "rack-flash"
 
 require "./lib/user_database"
-
+require "./lib/fish_database"
 class App < Sinatra::Application
 
   enable :sessions
@@ -11,16 +11,20 @@ class App < Sinatra::Application
   def initialize
     super
     @user_database = UserDatabase.new
+    @fish_database = FishDatabase.new
   end
 
   get "/" do
-
-  erb :homepage
+    id = session[:id]
+    if id
+      erb :loggedin, :locals => {:users => display_users(id), :cur_user => @user_database.find(id)[:username], :fish => display_fish(id)}
+    else
+      erb :loggedout
+    end
   end
 
   get "/register" do
-
-  erb :register
+    erb :register
   end
 
   post "/register" do
@@ -31,38 +35,58 @@ class App < Sinatra::Application
     check_login(params[:username], params[:password])
   end
 
-  delete "/" do
+  get "/logout" do
+    session.delete(:id)
+    redirect "/"
+  end
+
+  delete "/:id" do
     id = params[:id].to_i
     flash[:notice] = "#{@user_database.find(id)[:username]} deleted"
     @user_database.delete(id)
-    erb :loggedin, :locals => {:users => display_users(session[:id]), :cur_user => @user_database.find(session[:id])[:username]}
+    redirect "/"
   end
 
+  get "/new_fish" do
+    erb :new_fish
+  end
 
+  post "/new_fish" do
+    @fish_database.insert(:name => params[:fish_name],
+                          :author => session[:id],
+                          :wiki => "http://en.wikipedia.org/wiki/#{params[:fish_name]}"
+                          )
+    redirect "/"
+  end
 
+  get "/:user" do
+    erb :user, :locals => {:name => params[:user], :fish => display_fish(get_id(params[:user]))}
+  end
+
+  delete "/fish/:id" do
+    id = params[:id].to_i
+    flash[:notice] = "#{@fish_database.find(id)[:name]} deleted"
+    @fish_database.delete(id)
+    redirect "/"
+  end
 
   private
 
   def check_login(username, password)
     if username == '' && password == ''
       flash[:notice] = "Username and password is required"
-      redirect "/"
     elsif username == ''
       flash[:notice] = "Username is required"
-      redirect "/"
     elsif password == ''
       flash[:notice] = "Password is required"
-      redirect "/"
     elsif !get_id(username)
       flash[:notice] = "Not a registered user"
-      redirect "/"
     elsif get_id(username) and !check_pw(password)
       flash[:notice] = "Invalid password"
-      redirect "/"
     else
       session[:id] = get_id(username)
-      erb :loggedin, :locals => {:users => display_users(session[:id]), :cur_user => @user_database.find(session[:id])[:username]}
     end
+    redirect "/"
   end
 
   def check_reg(username, password)
@@ -81,10 +105,7 @@ class App < Sinatra::Application
   end
 
   def get_id(username)
-    valid_user = @user_database.all.select {|user| user[:username] == username}
-    if valid_user != []
-      valid_user[0][:id]
-    end
+    @user_database.all.select {|user| user[:username] == username}[0][:id]
   end
 
   def check_pw(password)
@@ -92,6 +113,10 @@ class App < Sinatra::Application
     if pw != []
       pw
     end
+  end
+
+  def display_fish(id)
+    @fish_database.all.select {|fish| fish[:author] == id}
   end
 
 end
