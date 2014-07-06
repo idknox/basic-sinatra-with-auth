@@ -1,13 +1,15 @@
 class UserDatabase
   def initialize
     @users = []
+    @count = 0
   end
 
   def insert(user)
     validate!(user, :username, :password)
 
     user = user.dup
-    user[:id] = next_id
+    user[:id] = @count
+    @count += 1
 
     @users.push(user)
 
@@ -15,12 +17,24 @@ class UserDatabase
   end
 
   def find(id)
-    (@users[offset_id(id)] or raise UserNotFoundError).dup
+    @users.select {|user| user[:id] == id}[0]
   end
 
+  # def find(id)
+  #   (@users[offset_id(id)] or raise UserNotFoundError).dup
+  # end
+
   def delete(id)
-    @users.delete_at(offset_id(id)) or raise UserNotFoundError
+    @users.each do |user|
+      if user[:id] == id
+        @users.delete(user) or raise UserNotFoundError
+      end
+    end
   end
+
+  # def delete(id)
+  #   @users.delete_at(offset_id(id)) or raise UserNotFoundError
+  # end
 
   def all
     @users.dup
@@ -40,7 +54,7 @@ class UserDatabase
   end
 
   def next_id
-    @users.length + 1
+    @count
   end
 
   def offset_id(id)

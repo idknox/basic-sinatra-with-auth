@@ -12,6 +12,7 @@ class App < Sinatra::Application
     super
     @user_database = UserDatabase.new
     @fish_database = FishDatabase.new
+
   end
 
   get "/" do
