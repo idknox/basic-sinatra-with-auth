@@ -29,7 +29,7 @@ class App < Sinatra::Application
   end
 
   post "/register" do
-    check_reg(params[:name], params[:password])
+    check_reg(params[:username], params[:password])
   end
 
   post "/" do
@@ -91,7 +91,13 @@ class App < Sinatra::Application
   end
 
   def check_reg(username, password)
-    if (@user_database.all).select { |user| user[:username] == username } == []
+    if username == ""
+      flash[:notice] = "Please enter a username"
+      redirect "/register"
+    elsif password == ""
+      flash[:notice] = "Please enter a password"
+      redirect "/register"
+    elsif @user_database.all.select { |user| user[:username] == username } == []
       @user_database.insert(:username => username, :password => password)
       flash[:notice] = "Thank you for registering"
       redirect "/"
@@ -106,7 +112,10 @@ class App < Sinatra::Application
   end
 
   def get_id(username)
-    @user_database.all.select {|user| user[:username] == username}[0][:id]
+    val_users = @user_database.all.select {|user| user[:username] == username}
+    if val_users != []
+      val_users[0][:id]
+    end
   end
 
   def check_pw(password)

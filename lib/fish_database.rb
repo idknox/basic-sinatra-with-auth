@@ -18,10 +18,6 @@ class FishDatabase
     @fish.select {|fishie| fishie[:id] == id}[0]
   end
 
-  # def find(id)
-  #   (@fish[offset_id(id)] or raise UserNotFoundError).dup
-  # end
-
   def delete(id)
     @fish.each do |fishie|
       if fishie[:id] == id
@@ -29,10 +25,6 @@ class FishDatabase
       end
     end
   end
-
-  # def delete(id)
-  #   @fish.delete_at(offset_id(id)) or raise UserNotFoundError
-  # end
 
   def all
     @fish.dup

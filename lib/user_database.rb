@@ -20,10 +20,6 @@ class UserDatabase
     @users.select {|user| user[:id] == id}[0]
   end
 
-  # def find(id)
-  #   (@users[offset_id(id)] or raise UserNotFoundError).dup
-  # end
-
   def delete(id)
     @users.each do |user|
       if user[:id] == id
@@ -31,10 +27,6 @@ class UserDatabase
       end
     end
   end
-
-  # def delete(id)
-  #   @users.delete_at(offset_id(id)) or raise UserNotFoundError
-  # end
 
   def all
     @users.dup
